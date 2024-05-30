@@ -13,7 +13,7 @@
             <div>
                 <label>Size:</label>
                 <!-- Etiqueta para el tamaño de la pizza -->
-                <input type="range" min="@Pizza.MinimumSize" max="@Pizza.MaximumSize" step="1" />
+                <input type="range" min="@Pizza.MinimumSize" max="@Pizza.MaximumSize" step="1" @bind="Pizza.Size" @bind:event="oninput"/>
                 <!-- Control deslizante para seleccionar el tamaño de la pizza -->
                 <span class="size-label">
                     @(Pizza.Size)" (£@(Pizza.GetFormattedTotalPrice()))

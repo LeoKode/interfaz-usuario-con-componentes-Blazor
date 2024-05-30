@@ -38,9 +38,51 @@
                           OnConfirm="OrderState.ConfirmConfigurePizzaDialog" />
 }
 
+<div class="sidebar">
+    <!-- Verificar si hay pizzas en la orden -->
+    @if (order.Pizzas.Any())
+    {
+        <div class="order-contents">
+            <h2>Your order</h2>
+
+            <!-- Iterar sobre cada pizza configurada en la orden -->
+            @foreach (var configuredPizza in order.Pizzas)
+            {
+                <div class="cart-item">
+                    <!-- Mostrar el tamaño y el nombre de la pizza -->
+                    <div class="title">@(configuredPizza.Size)" @configuredPizza.Special.Name</div>
+                    <!-- Mostrar el precio total de la pizza -->
+                    <div class="item-price">
+                        @configuredPizza.GetFormattedTotalPrice()
+                    </div>
+                    <!-- Enlace para eliminar la pizza configurada de la orden -->
+                    <a @onclick="@(() => OrderState.RemoveConfiguredPizza(configuredPizza))" class="delete-item">x</a>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- Mostrar mensaje cuando el carrito está vacío -->
+        <div class="empty-cart">Choose a pizza<br>to get started</div>
+    }
+
+    <!-- Mostrar el total de la orden si hay pizzas en el carrito -->
+    <div class="order-total @(order.Pizzas.Any() ? "" : "hidden")">
+        Total:
+        <!-- Mostrar el precio total de la orden formateado -->
+        <span class="total-price">@order.GetFormattedTotalPrice()</span>
+        <!-- Enlace para proceder al checkout, deshabilitado si no hay pizzas en la orden -->
+        <a href="checkout" class="@(OrderState.Order.Pizzas.Count == 0 ? "btn btn-warning disabled" : "btn btn-warning")">
+            Order >
+        </a>
+    </div>
+</div>
+
 @code {
     // Lista para almacenar las pizzas especiales
     List<PizzaSpecial> specials = new List<PizzaSpecial>();
+    Order order => OrderState.Order;
 
     // Obtener las pizzas especiales cuando se inicializa el componente
     protected override async Task OnInitializedAsync()

@@ -50,4 +50,10 @@ public class OrderState
         // Oculta el diálogo de configuración
         ShowingConfigureDialog = false;
     }
+
+    // Método para quitar pizzas de un pedido.
+    public void RemoveConfiguredPizza(Pizza pizza)
+    {
+        Order.Pizzas.Remove(pizza);
+    }
 }
