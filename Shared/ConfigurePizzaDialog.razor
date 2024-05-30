@@ -1,0 +1,45 @@
+﻿@inject HttpClient HttpClient
+<!-- Inyecta HttpClient para hacer solicitudes HTTP si es necesario -->
+
+<div class="dialog-container">
+    <div class="dialog">
+        <div class="dialog-title">
+            <h2>@Pizza.Special.Name</h2>
+            <!-- Muestra el nombre de la especialidad de la pizza -->
+            @Pizza.Special.Description
+            <!-- Muestra la descripción de la especialidad de la pizza -->
+        </div>
+        <form class="dialog-body">
+            <div>
+                <label>Size:</label>
+                <!-- Etiqueta para el tamaño de la pizza -->
+                <input type="range" min="@Pizza.MinimumSize" max="@Pizza.MaximumSize" step="1" />
+                <!-- Control deslizante para seleccionar el tamaño de la pizza -->
+                <span class="size-label">
+                    @(Pizza.Size)" (£@(Pizza.GetFormattedTotalPrice()))
+                    <!-- Muestra el tamaño seleccionado y el precio formateado -->
+                </span>
+            </div>
+        </form>
+
+        <div class="dialog-buttons">
+            <button class="btn btn-secondary mr-auto" @onclick="OnCancel">Cancel</button>
+            <!-- Botón de cancelar que invoca el callback OnCancel -->
+            <span class="mr-center">
+                Price: <span class="price">@(Pizza.GetFormattedTotalPrice())</span>
+                <!-- Muestra el precio total formateado -->
+            </span>
+            <button class="btn btn-success ml-auto" @onclick="OnConfirm">Order ></button>
+            <!-- Botón de confirmar pedido que invoca el callback OnConfirm -->
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Pizza Pizza { get; set; }
+    <!-- Parámetro que representa la pizza a configurar -->
+    [Parameter] public EventCallback OnCancel { get; set; }
+    <!-- Callback para manejar la cancelación -->
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    <!-- Callback para manejar la confirmación -->
+}

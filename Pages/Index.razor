@@ -1,19 +1,25 @@
 @page "/"
 
-<!-- Inyecta un servicio HttpClient para realizar solicitudes HTTP.-->
+@using BlazingPizza.Services
+<!-- realizar solicitudes HTTP-->
 @inject HttpClient HttpClient
-<!--Inyecta NavigationManager para obtener información de navegación y la URL base.-->
+<!-- manejar la navegación -->
 @inject NavigationManager NavigationManager
+<!-- gestionar el estado de la orden de pizzas-->
+@inject OrderState OrderState
 
 <div class="main">
     <h1>Blazing Pizzas</h1>
     <ul class="pizza-cards">
+        <!-- Mostrar las pizzas especiales -->
         @if (specials != null)
         {
             @foreach (var special in specials)
             {
-                <li style="background-image: url('@special.ImageUrl')">
+                <!-- Cada pizza especial se representa como un elemento de lista -->
+                <li @onclick="@(() => OrderState.ShowConfigurePizzaDialog(special))" style="background-image: url('@special.ImageUrl')">
                     <div class="pizza-info">
+                        <!-- Mostrar nombre, descripción y precio de la pizza -->
                         <span class="title">@special.Name</span>
                         @special.Description
                         <span class="price">@special.GetFormattedBasePrice()</span>
@@ -24,14 +30,21 @@
     </ul>
 </div>
 
-@code {
-    List<PizzaSpecial> specials = new();
+<!-- Mostrar el diálogo de configuración de la pizza si es necesario -->
+@if (OrderState.ShowingConfigureDialog)
+{
+    <ConfigurePizzaDialog Pizza="OrderState.ConfiguringPizza"
+                          OnCancel="OrderState.CancelConfigurePizzaDialog"
+                          OnConfirm="OrderState.ConfirmConfigurePizzaDialog" />
+}
 
-    /* Este código ha reemplazado OnInitialized() por OnInitializedAsync(). Las especiales se van a devolver ahora 
-    como JSON desde la aplicación de forma asincrónica.*/
+@code {
+    // Lista para almacenar las pizzas especiales
+    List<PizzaSpecial> specials = new List<PizzaSpecial>();
+
+    // Obtener las pizzas especiales cuando se inicializa el componente
     protected override async Task OnInitializedAsync()
     {
         specials = await HttpClient.GetFromJsonAsync<List<PizzaSpecial>>(NavigationManager.BaseUri + "specials");
     }
 }
-		

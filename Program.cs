@@ -1,5 +1,6 @@
 // Esta instrucción permite que la aplicación use el nuevo servicio.
 using BlazingPizza.Data;
+using BlazingPizza.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddServerSideBlazor();
 //  de los especiales de pizza. La segunda instrucción registra el nuevo elemento PizzaStoreContext y proporciona el nombre de archivo de la base de datos SQLite.
 builder.Services.AddHttpClient();
 builder.Services.AddSqlite<PizzaStoreContext>("Data Source=pizza.db");
+builder.Services.AddScoped<OrderState>();
 
 var app = builder.Build();
 

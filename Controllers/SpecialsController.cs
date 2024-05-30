@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BlazingPizza.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BlazingPizza.Data;
 
 namespace BlazingPizza.Controllers;
 // Establece la ruta base para este controlador en "specials"
@@ -25,7 +25,6 @@ public class SpecialsController : Controller
     {
         return (await _db.Specials.ToListAsync()).OrderByDescending(s => s.BasePrice).ToList();
     }
-}
 }
 
 // Esta clase crea un controlador que nos permitirá consultar en la base de datos las pizzas especiales
